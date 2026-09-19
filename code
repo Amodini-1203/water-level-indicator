@@ -1,0 +1,55 @@
+//for 600 Litre Water Tank
+/*#define trigPin 9;
+#define echoPin 10;*/
+long duration;
+
+#include<LiquidCrystal.h>
+LiquidCrystal lcd(2,3,4,5,6,7);
+
+long UltrasonicDistance(int trigPin, int echoPin)
+{
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  //float dist;
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(2);
+  digitalWrite(trigPin,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  return pulseIn(echoPin, HIGH);
+  
+}
+
+void setup()
+{
+  Serial.begin(9600);
+  lcd.begin(16,2);
+  lcd.clear();
+  lcd.print("Water Level(%)");
+  
+}
+void loop()
+{
+  float dist = 0.01723 * UltrasonicDistance(9,10);
+  int level = map(dist, 334 , 0, 0 , 100);
+  lcd.setCursor(0,1);
+  lcd.print(level);
+  lcd.setCursor(3,1);
+  lcd.print("%");
+  int speed=10;
+    
+  if( level >=99)
+  { 
+   analogWrite(11,0);
+  }
+  else if( level <95)  
+  {
+    analogWrite(11,speed);
+  }
+  
+  else 
+  {
+   analogWrite(11,0); // this is for safety in case.
+  }
+  
+}
